@@ -1,3 +1,22 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["airbnb", "prettier", "next/core-web-vitals"],
+  "rules": {
+    "spaced-comment":"off",
+    "no-console":"warn",
+    "consistent-return":"off",
+    "func-names":"off",
+    "object-shorthand":"off",
+    "no-process-exit":"off",
+    "no-param-reassign":"off",
+    "no-empty":"warn",
+    "no-return-await":"off",
+    "import":"off",
+    "no-underscore-dangle":"off",
+    "class-methods-use-this":"off",
+    "prefer-destructuring":["error",{"object":true,"array":false}],
+    "no-unused-vars":["error",{"argsIgnorePattern":"req|res|next|val"}],
+    "react/jsx-filename-extension": [1, {
+      "extensions": [".js", ".jsx"]
+    }]
+  }
 }
