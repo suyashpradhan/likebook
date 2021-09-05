@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Login() {
   return (
     <>
@@ -13,9 +15,9 @@ export default function Login() {
             </p>
             <p className="flex flex-col items-center justify-center mt-10 text-center">
               <span>Dont have an account?</span>
-              <a href="#" className="underline">
-                Get Started
-              </a>
+              <Link href="/register">
+                <a className="underline">Get Started</a>
+              </Link>
             </p>
           </div>
           <div className="p-5 bg-white md:flex-1">
@@ -51,25 +53,23 @@ export default function Login() {
                   className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
                 />
               </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  className="w-4 h-4 transition duration-300 rounded focus:ring-2 focus:ring-offset-0 focus:outline-none focus:ring-blue-200"
-                />
-                <label
-                  for="remember"
-                  className="text-sm font-semibold text-gray-500"
-                >
-                  Remember me
-                </label>
-              </div>
+
               <div>
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 text-lg uppercase font-bold  text-white transition-colors duration-300 bg-primary rounded-md shadow focus:outline-none focus:ring-primary focus:ring-4"
+                  className="w-full px-4 py-3 text-lg uppercase font-bold  text-white  bg-primary rounded-md shadow focus:outline-none focus:ring-primary focus:ring-4 my-2"
                 >
                   Log in
+                </button>
+                <span className="flex justify-center my-2 color-text-primary ">
+                  or
+                </span>
+                <button
+                  type="submit"
+                  className="w-full px-4 py-3 text-lg uppercase font-bold  text-white 
+                  rounded-md shadow focus:outline-none focus:ring-primary focus:ring-4"
+                >
+                  Guest Login
                 </button>
               </div>
             </form>

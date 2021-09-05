@@ -10,7 +10,6 @@
     "no-param-reassign":"off",
     "no-empty":"warn",
     "no-return-await":"off",
-    "import":"off",
     "no-underscore-dangle":"off",
     "class-methods-use-this":"off",
     "prefer-destructuring":["error",{"object":true,"array":false}],
