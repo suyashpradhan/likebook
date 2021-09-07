@@ -9,14 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.21.4",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.4",
     "morgan": "^1.10.0",
     "next": "11.1.0",
-    "nodemon": "^2.0.12",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.2.0"
@@ -32,6 +34,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
+    "nodemon": "^2.0.12",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
     "tailwindcss": "^2.2.8"
