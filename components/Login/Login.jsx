@@ -57,20 +57,20 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 text-lg uppercase font-bold  text-white  bg-primary rounded-md shadow focus:outline-none focus:ring-primary focus:ring-4 my-2"
+                  className="w-full px-4 py-3 text-lg uppercase font-bold  text-white  bg-primary rounded-md shadow focus:outline-none focus:ring-primary focus:ring-1 my-2"
                 >
                   Log in
                 </button>
-                <span className="flex justify-center my-2 color-text-primary ">
+                {/* <span className="flex justify-center my-2 color-text-primary ">
                   or
                 </span>
                 <button
                   type="submit"
                   className="w-full px-4 py-3 text-lg uppercase font-bold  text-white 
-                  rounded-md shadow focus:outline-none focus:ring-primary focus:ring-4"
+                  rounded-md focus:outline-none focus:ring-primary focus:ring-1 "
                 >
                   Guest Login
-                </button>
+                </button> */}
               </div>
             </form>
           </div>

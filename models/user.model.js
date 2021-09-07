@@ -19,6 +19,7 @@ const UserSchema = new Schema(
       type: String,
       minLength: 8,
       required: [true, "Password should not be empty"],
+      select: false,
     },
   },
   { timestamps: true }
@@ -29,8 +30,16 @@ UserSchema.pre("save", async function (next) {
   //Only Run if password is modified
   if (!this.isModified("password")) return next();
 
-  //Hashing and Salting the password with bcryptjs
+  //Hashing and Salting the password
   this.password = await bcrypt.hash(this.password, 12);
 });
+
+//Instance method for comparing passwords
+UserSchema.methods.checkPassword = async function (
+  plainUserPassword,
+  hashedUserPassword
+) {
+  return await bcrypt.compare(plainUserPassword, hashedUserPassword);
+};
 
 module.exports = mongoose.model.UserModel || mongoose.model("User", UserSchema);

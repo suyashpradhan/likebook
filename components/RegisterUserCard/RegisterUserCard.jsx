@@ -1,27 +1,43 @@
-import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
+import { registerUser } from "../../services/authentication.services";
 
 export default function RegisterUserCard() {
-  const [inputs, setInputs] = useState({
+  const [formInputs, setFormInputs] = useState({
     fullName: "",
     userName: "",
     password: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState("");
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:3000/api/user/register", {
-        fullName: inputs.fullName,
-        userName: inputs.fullName,
-        password: inputs.password,
-      });
-      return res;
-    } catch (error) {
-      console.log("Error", error);
-    }
+  function handleInputs(e) {
+    setFormInputs((inputs) => {
+      return {
+        ...inputs,
+        [e.target.name]: e.target.value,
+      };
+    });
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await registerUser(
+      {
+        fullName: formInputs.fullName,
+        userName: formInputs.userName,
+        password: formInputs.password,
+      },
+      loading,
+      setLoading
+    );
+
+    if (response.status === 201) {
+      console.log("Success");
+    } else {
+      setErrors(response.description);
+    }
+  };
 
   return (
     <div className="flex items-center min-h-screen font-default p-4 bg-background lg:justify-center">
@@ -63,10 +79,8 @@ export default function RegisterUserCard() {
                 type="text"
                 name="fullName"
                 className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-                value={inputs.fullName}
-                onChange={(e) =>
-                  setInputs({ ...inputs, [e.target.name]: e.target.value })
-                }
+                value={formInputs.fullName}
+                onChange={handleInputs}
               />
             </div>
 
@@ -81,10 +95,8 @@ export default function RegisterUserCard() {
                 type="text"
                 name="userName"
                 className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-                value={inputs.username}
-                onChange={(e) =>
-                  setInputs({ ...inputs, [e.target.name]: e.target.value })
-                }
+                value={formInputs.username}
+                onChange={handleInputs}
               />
             </div>
             <div className="flex flex-col space-y-1">
@@ -100,13 +112,11 @@ export default function RegisterUserCard() {
                 type="password"
                 name="password"
                 className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-                value={inputs.password}
-                onChange={(e) =>
-                  setInputs({ ...inputs, [e.target.name]: e.target.value })
-                }
+                value={formInputs.password}
+                onChange={handleInputs}
               />
             </div>
-
+            <p>{errors}</p>
             <div>
               <button
                 type="submit"
