@@ -7,10 +7,12 @@ import {
 import { loginUser } from "../../services/authentication.services";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { useAuth } from "../../context/auth-context/context.js";
 
 // LoginCard Component
 export default function Login() {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const { authDispatch } = useAuth();
   const router = useRouter();
 
   // Function to get text inputs value
@@ -29,29 +31,25 @@ export default function Login() {
       password: state.password,
     });
     if (response.status === 201) {
-      dispatch({
+      authDispatch({
         type: "SET_LOGIN",
-        payload: { token: response.data.token },
-      });
-
-      /* localStorage?.setItem(
-        "login",
-        JSON.stringify({
-          isLoggedIn: true,
-          userAuthToken: `Bearer ${response.data.token}`,
-          user: {
+        payload: {
+          userDetails: {
             userName: response.data.user.userName,
             fullName: response.data.user.fullName,
+            userId: response.data.user._id,
           },
-        })
-      ); */
+        },
+      });
+
       Cookies.set("isLoggedIn", true);
       Cookies.set("jwt", response.data.token);
       Cookies.set("userName", response.data.user.userName);
       Cookies.set("fullName", response.data.user.fullName);
+      Cookies.set("userId", response.data.user._id);
       router.push("/user/feed");
     } else {
-      dispatch({
+      authDispatch({
         type: "SET_ERRORS",
         payload: response.message,
       });
@@ -88,7 +86,7 @@ export default function Login() {
             >
               <div className="flex flex-col space-y-1">
                 <label
-                  for="userName"
+                  htmlFor="userName"
                   className="text-sm font-semibold text-gray-500"
                 >
                   Username
@@ -104,7 +102,7 @@ export default function Login() {
               <div className="flex flex-col space-y-1">
                 <div className="flex items-center justify-between">
                   <label
-                    for="password"
+                    htmlFor="password"
                     className="text-sm font-semibold text-gray-500"
                   >
                     Password
@@ -116,6 +114,7 @@ export default function Login() {
                   value={state.password}
                   onChange={handleTextInputs}
                   className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                  autoComplete="true"
                 />
               </div>
               <p>{state.errors}</p>

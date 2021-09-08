@@ -1,5 +1,4 @@
 import dbConnection from "../../../config/db-connection";
-import { cookieOptions } from "../../../helpers/cookieOptions";
 import User from "../../../models/user.model";
 import { signToken } from "../../../utils/signToken";
 
@@ -7,7 +6,6 @@ const handler = async (req, res) => {
   if (req.method === "POST") {
     try {
       const { userName, password } = req.body;
-      console.log(userName, password);
 
       if (!userName || !password) {
         res.status(400).json({
@@ -29,9 +27,6 @@ const handler = async (req, res) => {
       }
       const token = signToken(user._id);
 
-      /* if (process.env.NODE_ENV === "production");
-
-      res.cookie("jwt", token, { httpOnly: true }); */
       res.status(201).json({
         status: "success",
         message: "Login Successful!",

@@ -3,8 +3,23 @@ import { BsHeart } from "react-icons/bs";
 export default function PostCard() {
   return (
     <>
-      <section class="flex items-center font-default justify-center px-4 mb-8 ">
+      <section className="flex items-center font-default justify-center px-4 mb-8 ">
         <div class="bg-white md:w-3/3 lg:w-2/3 rounded-lg shadow-lg p-8">
+          <div className="flex mb-8">
+            <div>
+              <img
+                className="rounded-full w-14"
+                src="https://pbs.twimg.com/profile_images/1367267802940375042/H4JDd6aC_400x400.jpg"
+              />
+            </div>
+
+            <div className="ml-3 flex flex-col w-full">
+              <h1 className="text-text-primary font-semibold">
+                Suyash Pradhan
+              </h1>
+              <h2 className="text-text-secondary">@suyashpradhan</h2>
+            </div>
+          </div>
           <p class="text-secondary tracking-normal text-md">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis
             necessitatibus consequatur beatae eaque illum eligendi autem id nam

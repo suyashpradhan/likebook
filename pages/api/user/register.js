@@ -1,5 +1,6 @@
 import dbConnection from "../../../config/db-connection";
 import User from "../../../models/user.model";
+import Post from "../../../models/post.model";
 
 const handler = async (req, res) => {
   if (req.method === "POST") {

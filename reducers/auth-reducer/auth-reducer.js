@@ -22,6 +22,10 @@ export const authReducer = (state, action) => {
         ...state,
         isLoggedIn: true,
         userAuthToken: action.payload.token,
+        userDetails: {
+          userName: action.payload,
+          fullName: action.payload,
+        },
       };
     case actions.SET_LOGOUT:
       return {

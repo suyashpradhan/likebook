@@ -42,4 +42,4 @@ UserSchema.methods.checkPassword = async function (
   return await bcrypt.compare(plainUserPassword, hashedUserPassword);
 };
 
-module.exports = mongoose.model.UserModel || mongoose.model("User", UserSchema);
+module.exports = mongoose.model.User || mongoose.model("User", UserSchema);
