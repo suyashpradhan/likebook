@@ -1,3 +1,8 @@
 # Facebook Like System
 
-## Build using Next.js
+## Tech Stack
+
+1. NextJS
+2. MongoDB
+3. NodeJS
+4. TailwindCSS

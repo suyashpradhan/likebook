@@ -1,4 +1,5 @@
 import dbConnection from "../../../config/db-connection";
+import { cookieOptions } from "../../../helpers/cookieOptions";
 import User from "../../../models/user.model";
 import { signToken } from "../../../utils/signToken";
 
@@ -27,10 +28,15 @@ const handler = async (req, res) => {
         return true;
       }
       const token = signToken(user._id);
+
+      /* if (process.env.NODE_ENV === "production");
+
+      res.cookie("jwt", token, { httpOnly: true }); */
       res.status(201).json({
         status: "success",
         message: "Login Successful!",
         token,
+        user,
       });
     } catch (err) {
       res.status(500).json({

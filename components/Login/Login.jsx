@@ -1,6 +1,63 @@
 import Link from "next/link";
+import { useReducer } from "react";
+import {
+  authReducer,
+  initialState,
+} from "../../reducers/auth-reducer/auth-reducer.js";
+import { loginUser } from "../../services/authentication.services";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
+// LoginCard Component
 export default function Login() {
+  const [state, dispatch] = useReducer(authReducer, initialState);
+  const router = useRouter();
+
+  // Function to get text inputs value
+  const handleTextInputs = (e) => {
+    dispatch({
+      type: "HANDLE_INPUTS",
+      field: e.target.name,
+      payload: e.target.value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const response = await loginUser({
+      userName: state.userName,
+      password: state.password,
+    });
+    if (response.status === 201) {
+      dispatch({
+        type: "SET_LOGIN",
+        payload: { token: response.data.token },
+      });
+
+      /* localStorage?.setItem(
+        "login",
+        JSON.stringify({
+          isLoggedIn: true,
+          userAuthToken: `Bearer ${response.data.token}`,
+          user: {
+            userName: response.data.user.userName,
+            fullName: response.data.user.fullName,
+          },
+        })
+      ); */
+      Cookies.set("isLoggedIn", true);
+      Cookies.set("jwt", response.data.token);
+      Cookies.set("userName", response.data.user.userName);
+      Cookies.set("fullName", response.data.user.fullName);
+      router.push("/user/feed");
+    } else {
+      dispatch({
+        type: "SET_ERRORS",
+        payload: response.message,
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex items-center min-h-screen font-default p-4 bg-background lg:justify-center">
@@ -24,17 +81,23 @@ export default function Login() {
             <h3 className="my-4 text-2xl font-semibold text-gray-700">
               Account Login
             </h3>
-            <form action="#" className="flex flex-col space-y-5">
+            <form
+              onSubmit={handleFormSubmit}
+              action="#"
+              className="flex flex-col space-y-5"
+            >
               <div className="flex flex-col space-y-1">
                 <label
-                  for="email"
+                  for="userName"
                   className="text-sm font-semibold text-gray-500"
                 >
                   Username
                 </label>
                 <input
-                  type="email"
-                  id="email"
+                  type="userName"
+                  name="userName"
+                  value={state.userName}
+                  onChange={handleTextInputs}
                   className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
                 />
               </div>
@@ -49,11 +112,13 @@ export default function Login() {
                 </div>
                 <input
                   type="password"
-                  id="password"
+                  name="password"
+                  value={state.password}
+                  onChange={handleTextInputs}
                   className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
                 />
               </div>
-
+              <p>{state.errors}</p>
               <div>
                 <button
                   type="submit"
