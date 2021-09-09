@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon server/server.js --watch server",
     "build": "next build",
-    "start": "next start",
+    "deploy": "now --public",
+    "start": "node server/app.js",
     "lint": "next lint"
   },
   "dependencies": {

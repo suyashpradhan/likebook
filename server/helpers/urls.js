@@ -1,11 +1,35 @@
 import axios from "axios";
-const baseURL = process.env.NODE_ENV === "production" ? "" : "http://localhost";
 
-export default baseURL;
+export const addNewPost = async (postedBy, content, cookie) => {
+  try {
+    const response = await axios.post(
+      `/api/posts/new/${postedBy}`,
+      {
+        content,
+      },
+      {
+        headers: {
+          Authorization: cookie,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
-export const addPost = async (authUserId, post) => {
-  const { data } = await axios.post(`/api/posts/new/${authUserId}`, post);
-  return data;
+export const getAllPosts = async (userId, cookie) => {
+  try {
+    const response = await axios.get(`/api/posts/feed/${userId}`, {
+      headers: {
+        Authorization: cookie,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
 };
 
 export const likePost = async (postId) => {
@@ -18,17 +42,20 @@ export const unlikePost = async (postId) => {
   return data;
 };
 
-export const getPostsByUser = async (userId) => {
-  const { data } = await axios.get(`/api/posts/by/${userId}`);
-  return data;
-};
-
 export const registerUser = async (user) => {
-  const { data } = await axios.post("/api/auth/register", user);
-  return data;
+  try {
+    const response = await axios.post("/api/register", user);
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
 };
 
 export const loginUser = async (user) => {
-  const { data } = await axios.post("/api/auth/login", user);
-  return data;
+  try {
+    const response = await axios.post("/api/login", user);
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
 };

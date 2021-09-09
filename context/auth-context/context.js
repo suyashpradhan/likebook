@@ -9,6 +9,8 @@ const initialState = {
     fullName: "",
     userId: "",
   },
+  error: "",
+  posts: [],
 };
 
 const authReducer = (state, action) => {
@@ -27,6 +29,18 @@ const authReducer = (state, action) => {
       return {
         ...state,
         errors: action.payload,
+      };
+
+    case "SET_POSTS":
+      return {
+        ...state,
+        posts: state.posts.concat(action.payload),
+      };
+
+    case "SET_ERROR":
+      return {
+        ...state,
+        error: action.payload,
       };
 
     default:

@@ -17,16 +17,6 @@ export const authReducer = (state, action) => {
         [action.field]: action.payload,
       };
 
-    case actions.SET_LOGIN:
-      return {
-        ...state,
-        isLoggedIn: true,
-        userAuthToken: action.payload.token,
-        userDetails: {
-          userName: action.payload,
-          fullName: action.payload,
-        },
-      };
     case actions.SET_LOGOUT:
       return {
         ...state,

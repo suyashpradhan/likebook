@@ -1,37 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/auth-context/context";
-import { addNewPost } from "../../services/posts.services";
+import { addNewPost, getAllPosts } from "../../server/helpers/urls";
 import PostCard from "../Post/PostCard";
+import { parseCookies } from "nookies";
 
 export default function FeedCard() {
   const { authState, authDispatch } = useAuth();
   const [content, setContent] = useState("");
 
+  /*  useEffect(() => {
+    (async () => {
+      const res = await getAllPosts(authState.userDetails.userId);
+      if (res.status === 200 || res.status === 201) {
+        authDispatch({ type: "SET_POSTS", payload: res.data.posts });
+      }
+    })();
+  }, []); */
+
+  const postInputHandle = (e) => {
+    setContent(e.target.value);
+  };
+
+  console.log("state", authState);
+
   const postSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log("Post Data Here");
-    /* const response = await addNewPost({
-      userId: authState.userDetails.userId,
-      content,
-    });
-    console.log(response); */
-    /* if (response.status === 200 || response.status === 200) {
-      authDispatch({
-        type: "SET_LOGIN",
-        payload: {
-          userDetails: {
-            userName: response.data.user.userName,
-            fullName: response.data.user.fullName,
-            userId: response.data.user._id,
-          },
-        },
-      });
+    const postedBy = authState.userDetails.userId;
+    const { jwt } = parseCookies("jwt");
+    const response = await addNewPost(postedBy, content, jwt);
+    if (response.status === 200 || response.status === 200) {
+      authDispatch({ type: "SET_POST", payload: response.data.post });
     } else {
       authDispatch({
-        type: "SET_ERRORS",
+        type: "SET_ERROR",
         payload: response.message,
       });
-    } */
+    }
   };
 
   return (
@@ -50,7 +54,7 @@ export default function FeedCard() {
               <textarea
                 placeholder="Be Kind! And Say Something Sweet..."
                 className="w-full text-lg resize-none outline-none h-32"
-                onChange={(e) => setContent(e.target.value)}
+                onChange={postInputHandle}
               ></textarea>
             </div>
           </div>
@@ -69,7 +73,12 @@ export default function FeedCard() {
           </div>
         </div>
       </section>
-      <PostCard />
+      {authState.posts
+        .slice(0)
+        .reverse()
+        .map((post) => (
+          <PostCard key={post._id} post={post} />
+        ))}
     </>
   );
 }

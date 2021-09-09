@@ -4,7 +4,7 @@ import {
   authReducer,
   initialState,
 } from "../../reducers/auth-reducer/auth-reducer.js";
-import { loginUser } from "../../services/authentication.services";
+import { loginUser, getAllPosts } from "../../server/helpers/urls";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useAuth } from "../../context/auth-context/context.js";
@@ -30,7 +30,7 @@ export default function Login() {
       userName: state.userName,
       password: state.password,
     });
-    if (response.status === 201) {
+    if (response) {
       authDispatch({
         type: "SET_LOGIN",
         payload: {
@@ -40,6 +40,10 @@ export default function Login() {
             userId: response.data.user._id,
           },
         },
+      });
+      authDispatch({
+        type: "SET_POST",
+        payload: response.data.posts,
       });
 
       Cookies.set("isLoggedIn", true);

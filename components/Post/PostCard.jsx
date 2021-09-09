@@ -1,39 +1,33 @@
 import { BsHeart } from "react-icons/bs";
 
-export default function PostCard() {
+export default function PostCard({ post }) {
   return (
     <>
       <section className="flex items-center font-default justify-center px-4 mb-8 ">
-        <div class="bg-white md:w-3/3 lg:w-2/3 rounded-lg shadow-lg p-8">
+        <div className="bg-white md:w-full sm:w-full lg:w-2/3 rounded-lg shadow-lg p-8">
           <div className="flex mb-8">
             <div>
-              <img
+              {/* <img
                 className="rounded-full w-14"
-                src="https://pbs.twimg.com/profile_images/1367267802940375042/H4JDd6aC_400x400.jpg"
-              />
+                name={`${post.postedBy.fullName}`}
+                src="https://bit.ly/broken-link"
+              /> */}
+              {/* <div className="border-primary border-2 bg-warning-light text-warning w-12 h-12 mr-8 rounded-full inline-flex items-center align-middle justify-center font-bold text-lg">
+                {post.postedBy.fullName.split(" ").substr(0).join("")}
+              </div> */}
             </div>
 
             <div className="ml-3 flex flex-col w-full">
               <h1 className="text-text-primary font-semibold">
-                Suyash Pradhan
+                {post.postedBy.fullName}
               </h1>
-              <h2 className="text-text-secondary">@suyashpradhan</h2>
+              <h2 className="text-text-secondary">{post.postedBy.userName}</h2>
             </div>
           </div>
-          <p class="text-secondary tracking-normal text-md">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis
-            necessitatibus consequatur beatae eaque illum eligendi autem id nam
-            ab ipsam cupiditate ipsa mollitia ducimus deserunt cum
-            exercitationem enim est, impedit delectus maxime. Beatae optio atque
-            quod commodi fugit obcaecati. Distinctio maxime quis ipsa qui labore
-            tempore soluta quo dolorum ipsam eligendi molestias voluptate
-            consequatur neque dolore pariatur quibusdam tenetur, repellat nobis
-            deleniti quas? Laudantium assumenda alias error explicabo voluptates
-            voluptas fugit, neque deserunt consequuntur itaque? Nobis sapiente
-            rerum facilis placeat omnis, voluptatum et dolor, eligendi qui,
-            molestias doloribus. Asperiores nostrum aspernatur quisquam, numquam
+          <p className="text-secondary tracking-normal text-md">
+            {post.content}
           </p>
-          <div class="mt-2">
+          <div className="mt-2">
             <BsHeart className="mt-8 w-6 h-6 text-danger cursor-pointer " />
             <p className="mt-2 font-semibold text-secondary">0 Like(s)</p>
           </div>

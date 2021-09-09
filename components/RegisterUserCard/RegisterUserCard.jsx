@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
-import { registerUser } from "../../services/authentication.services";
+import { registerUser } from "../../server/helpers/urls";
 
 export default function RegisterUserCard() {
   const [formInputs, setFormInputs] = useState({
@@ -8,7 +8,6 @@ export default function RegisterUserCard() {
     userName: "",
     password: "",
   });
-  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState("");
 
   function handleInputs(e) {
@@ -22,15 +21,11 @@ export default function RegisterUserCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await registerUser(
-      {
-        fullName: formInputs.fullName,
-        userName: formInputs.userName,
-        password: formInputs.password,
-      },
-      loading,
-      setLoading
-    );
+    const response = await registerUser({
+      fullName: formInputs.fullName,
+      userName: formInputs.userName,
+      password: formInputs.password,
+    });
 
     if (response.status === 201) {
       console.log("Success");

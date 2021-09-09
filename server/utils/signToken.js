@@ -1,7 +1,9 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
-export const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRY,
+const signToken = (_id) => {
+  return jwt.sign({ _id }, "my-secret-token-is-very-hard-to-guess", {
+    expiresIn: "24h",
   });
 };
+
+module.exports = signToken;
