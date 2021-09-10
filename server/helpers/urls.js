@@ -19,9 +19,9 @@ export const addNewPost = async (postedBy, content, cookie) => {
   }
 };
 
-export const getAllPosts = async (userId, cookie) => {
+export const getAllPosts = async (cookie) => {
   try {
-    const response = await axios.get(`/api/posts/feed/${userId}`, {
+    const response = await axios.get(`/api/posts/feed/`, {
       headers: {
         Authorization: cookie,
       },
@@ -54,6 +54,15 @@ export const registerUser = async (user) => {
 export const loginUser = async (user) => {
   try {
     const response = await axios.post("/api/login", user);
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const fetchAllUsers = async () => {
+  try {
+    const response = await axios.get("/api/users/all");
     return response;
   } catch (error) {
     return error.response.data;

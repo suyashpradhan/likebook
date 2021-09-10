@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
-const User = mongoose.model("User");
+const User = require("../models/user.model");
 
-exports.getUsers = async (req, res) => {
-  const users = await User.find().select("_id name email createdAt updatedAt");
-  res.json(users);
+exports.fetchAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("_id userName fullName");
+    res.status(200).json({ status: "success", users });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.getAuthUser = (req, res) => {
@@ -27,13 +31,4 @@ exports.getUserById = async (req, res, next, id) => {
     return next();
   }
   next();
-};
-
-exports.getUserProfile = (req, res) => {
-  if (!req.profile) {
-    return res.status(404).json({
-      message: "No user found",
-    });
-  }
-  res.json(req.profile);
 };

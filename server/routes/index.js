@@ -10,7 +10,7 @@ router.post("/api/register", authController.registerNewUser);
 router.post("/api/login", authController.loginUser);
 
 // USER ROUTES
-router.get("/api/users", userController.getUsers);
+router.get("/api/users/all", userController.fetchAllUsers);
 
 // POST ROUTES
 /* router.param("postId", postController.getPostById);
@@ -21,7 +21,7 @@ router.post(
   postController.addNewPost
 );
 
-router.get("/api/posts/feed/:userId", postController.getAllPosts);
+router.get("/api/posts/feed/", postController.getAllPosts);
 
 router.put("/api/posts/like", postController.toggleLike);
 router.put("/api/posts/unlike", postController.toggleLike);

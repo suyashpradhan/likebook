@@ -27,6 +27,7 @@ exports.addNewPost = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({});
+    console.log(posts);
     res
       .status(200)
       .json({ status: "success", message: "Fetched all posts", posts });

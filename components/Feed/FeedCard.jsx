@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/auth-context/context";
-import { addNewPost, getAllPosts } from "../../server/helpers/urls";
+import {
+  addNewPost,
+  getAllPosts,
+  fetchAllUsers,
+} from "../../server/helpers/urls";
 import PostCard from "../Post/PostCard";
 import { parseCookies } from "nookies";
 
@@ -8,14 +12,21 @@ export default function FeedCard() {
   const { authState, authDispatch } = useAuth();
   const [content, setContent] = useState("");
 
-  /*  useEffect(() => {
+  useEffect(() => {
     (async () => {
-      const res = await getAllPosts(authState.userDetails.userId);
-      if (res.status === 200 || res.status === 201) {
+      try {
+        const res = await getAllPosts(authState.userDetails.userId);
+        const resUser = await fetchAllUsers();
         authDispatch({ type: "SET_POSTS", payload: res.data.posts });
+      } catch (error) {
+        /* authDispatch({
+          type: "SET_ERROR",
+          payload: response.message,
+        }); */
+        console.log(error);
       }
     })();
-  }, []); */
+  }, []);
 
   const postInputHandle = (e) => {
     setContent(e.target.value);
@@ -29,7 +40,7 @@ export default function FeedCard() {
     const { jwt } = parseCookies("jwt");
     const response = await addNewPost(postedBy, content, jwt);
     if (response.status === 200 || response.status === 200) {
-      authDispatch({ type: "SET_POST", payload: response.data.post });
+      authDispatch({ type: "SET_POSTS", payload: response.data.post });
     } else {
       authDispatch({
         type: "SET_ERROR",
@@ -72,13 +83,11 @@ export default function FeedCard() {
             </div>
           </div>
         </div>
+        <p className="text-lg">{authState.posts.length}</p>
       </section>
-      {authState.posts
-        .slice(0)
-        .reverse()
-        .map((post) => (
-          <PostCard key={post._id} post={post} />
-        ))}
+      {authState.posts.map((post) => (
+        <PostCard key={post._id} post={post} />
+      ))}
     </>
   );
 }

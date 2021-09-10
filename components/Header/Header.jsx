@@ -10,6 +10,7 @@ export default function Header() {
     Cookies.remove("userName");
     Cookies.remove("fullName");
     Cookies.remove("isLoggedIn");
+    Cookies.remove("userId");
     router.push("/");
   };
 

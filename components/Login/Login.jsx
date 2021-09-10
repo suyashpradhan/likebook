@@ -26,31 +26,27 @@ export default function Login() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const response = await loginUser({
+    const { data } = await loginUser({
       userName: state.userName,
       password: state.password,
     });
-    if (response) {
+    if (data) {
       authDispatch({
         type: "SET_LOGIN",
         payload: {
           userDetails: {
-            userName: response.data.user.userName,
-            fullName: response.data.user.fullName,
-            userId: response.data.user._id,
+            userName: data.user.userName,
+            fullName: data.user.fullName,
+            userId: data.user._id,
           },
         },
       });
-      authDispatch({
-        type: "SET_POST",
-        payload: response.data.posts,
-      });
 
       Cookies.set("isLoggedIn", true);
-      Cookies.set("jwt", response.data.token);
-      Cookies.set("userName", response.data.user.userName);
-      Cookies.set("fullName", response.data.user.fullName);
-      Cookies.set("userId", response.data.user._id);
+      Cookies.set("jwt", data.token);
+      Cookies.set("userName", data.user.userName);
+      Cookies.set("fullName", data.user.fullName);
+      Cookies.set("userId", data.user._id);
       router.push("/user/feed");
     } else {
       authDispatch({
