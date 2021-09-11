@@ -13,17 +13,15 @@ router.post("/api/login", authController.loginUser);
 router.get("/api/users/all", userController.fetchAllUsers);
 
 // POST ROUTES
-/* router.param("postId", postController.getPostById);
- */
 router.post(
   "/api/posts/new/:userId",
   authMiddleware,
   postController.addNewPost
 );
 
-router.get("/api/posts/feed/", postController.getAllPosts);
+router.get("/api/posts/feed", postController.getAllPosts);
 
-router.put("/api/posts/like", postController.toggleLike);
-router.put("/api/posts/unlike", postController.toggleLike);
+router.put("/api/posts/like", authMiddleware, postController.toggleLike);
+router.put("/api/posts/unlike", authMiddleware, postController.toggleLike);
 
 module.exports = router;

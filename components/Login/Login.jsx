@@ -49,10 +49,10 @@ export default function Login() {
       Cookies.set("userId", data.user._id);
       router.push("/user/feed");
     } else {
-      authDispatch({
+      /* authDispatch({
         type: "SET_ERRORS",
         payload: response.message,
-      });
+      }); */
     }
   };
 

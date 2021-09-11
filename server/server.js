@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const next = require("next");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 require("dotenv").config();
 
 require("./models/post.model");
@@ -13,6 +15,13 @@ const port = process.env.PORT || 3000;
 const ROOT_URL = dev ? `http://localhost:${port}` : process.env.PRODUCTION_URL;
 const app = next({ dev });
 const handle = app.getRequestHandler();
+
+const limitRequests = rateLimit({
+  max: 10,
+  windowMs: 5 * 60 * 1000,
+  statusCode: 429,
+  message: "Too many requests, please try again after 5 minutes",
+});
 
 const mongooseOptions = {
   useNewUrlParser: true,
@@ -34,6 +43,7 @@ app.prepare().then(() => {
   const server = express();
 
   server.use(express.json());
+  server.use(helmet());
 
   /* give all Next.js's requests to Next.js server */
   server.get("/_next/*", (req, res) => {

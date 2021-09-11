@@ -2,6 +2,11 @@ import * as actions from "./reducer.actions";
 import { parseCookies } from "nookies";
 const { isLoggedIn, userName, fullName, userId } = parseCookies("jwt");
 
+const isAlreadyAdded = (stateArray, id) => {
+  console.log(stateArray, id);
+  /* return stateArray.some((likeId) => likeId === id); */
+};
+
 export const initialState = {
   userDetails: {
     isLoggedIn: isLoggedIn || false,
@@ -10,6 +15,8 @@ export const initialState = {
     userId: userId || "",
   },
   posts: [],
+  isPostLiked: false,
+  likesCount: 0,
 };
 
 export const authReducer = (state, action) => {
@@ -39,10 +46,22 @@ export const authReducer = (state, action) => {
       };
 
     case actions.SET_POSTS:
-      console.log(state, action.payload);
+      return {
+        ...state,
+        posts: action.payload,
+      };
+
+    case actions.ADD_POST:
       return {
         ...state,
         posts: state.posts.concat(action.payload),
+      };
+
+    case "TOGGLE_LIKE":
+      console.log("Statelikes", state.posts);
+      return {
+        ...state,
+        likesCount: action.payload.likes.length,
       };
 
     case actions.SET_ERRORS:

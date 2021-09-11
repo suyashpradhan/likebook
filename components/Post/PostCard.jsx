@@ -1,6 +1,20 @@
 import { BsHeart } from "react-icons/bs";
+import { useAuth } from "../../context/auth-context/context";
+import { likePost, unlikePost } from "../../server/helpers/urls";
+import { parseCookies } from "nookies";
 
 export default function PostCard({ post }) {
+  const { authState, authDispatch } = useAuth();
+  const { jwt } = parseCookies("jwt");
+  console.log(post);
+  const handleToggleLike = async () => {
+    const isPostLiked = post.likes.includes(authState.userDetails.userId);
+    const functionToBeCalled = isPostLiked ? unlikePost : likePost;
+    const res = await functionToBeCalled(post._id, jwt);
+    /*     authDispatch({ type: "TOGGLE_LIKE", payload: res.post });
+     */ console.log(res.post);
+  };
+
   return (
     <>
       <section className="flex items-center font-default justify-center px-4 mb-8 ">
@@ -28,7 +42,9 @@ export default function PostCard({ post }) {
             {post.content}
           </p>
           <div className="mt-2">
-            <BsHeart className="mt-8 w-6 h-6 text-danger cursor-pointer " />
+            <button onClick={handleToggleLike}>
+              <BsHeart className="mt-8 w-6 h-6 text-danger cursor-pointer " />
+            </button>
             <p className="mt-2 font-semibold text-secondary">0 Like(s)</p>
           </div>
         </div>

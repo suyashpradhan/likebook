@@ -19,27 +19,54 @@ export const addNewPost = async (postedBy, content, cookie) => {
   }
 };
 
-export const getAllPosts = async (cookie) => {
+export const getAllPosts = async (cookie, page, limit) => {
   try {
-    const response = await axios.get(`/api/posts/feed/`, {
-      headers: {
-        Authorization: cookie,
-      },
-    });
+    const response = await axios.get(
+      `/api/posts/feed?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: cookie,
+        },
+      }
+    );
     return response;
   } catch (error) {
     return error.response.data;
   }
 };
 
-export const likePost = async (postId) => {
-  const { data } = await axios.put(`/api/posts/like`, { postId });
-  return data;
+export const likePost = async (postId, cookie) => {
+  try {
+    const { data } = await axios.put(
+      "/api/posts/like",
+      { postId },
+      {
+        headers: {
+          Authorization: cookie,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return error.response.data;
+  }
 };
 
-export const unlikePost = async (postId) => {
-  const { data } = await axios.put(`/api/posts/unlike`, { postId });
-  return data;
+export const unlikePost = async (postId, cookie) => {
+  try {
+    const { data } = await axios.put(
+      "/api/posts/unlike",
+      { postId },
+      {
+        headers: {
+          Authorization: cookie,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return error.response.data;
+  }
 };
 
 export const registerUser = async (user) => {

@@ -26,8 +26,18 @@ exports.addNewPost = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({});
-    console.log(posts);
+    const page = Number(req.query.page * 1 || 1);
+    const limit = Number(req.query.limit * 1 || 10);
+    const skipValue = Number((page - 1) * limit);
+
+    /* if (req.query.page) {
+      const postCount = await Post.countDocuments();
+      console.log(postCount);
+      if (skip > postCount) {
+        return new Error("You have reached the end of the page");
+      }
+    } */
+    const posts = await Post.find().skip(skipValue).limit(limit);
     res
       .status(200)
       .json({ status: "success", message: "Fetched all posts", posts });
@@ -37,16 +47,26 @@ exports.getAllPosts = async (req, res) => {
 };
 
 exports.toggleLike = async (req, res) => {
-  const { postId } = req.body;
+  try {
+    const { postId } = req.body;
+    const post = await Post.findOne({ _id: postId });
+    const idOfLikedPost = post.likes.map((id) => id.toString());
+    const user = req.user._id.toString();
 
-  const post = await Post.findOne({ _id: postId });
-  const likeIds = post.likes.map((id) => id.toString());
-  const authUserId = req.user._id.toString();
-  if (likeIds.includes(authUserId)) {
-    await post.likes.pull(authUserId);
-  } else {
-    await post.likes.push(authUserId);
+    if (idOfLikedPost.includes(user)) {
+      await post.likes.pull(user);
+    } else {
+      await post.likes.push(user);
+    }
+    await post.save();
+    res.status(200).json({
+      status: "success",
+      code: 200,
+      post,
+    });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ status: "failed", code: 400, message: "Something Went Wrong!" });
   }
-  await post.save();
-  res.json(post);
 };

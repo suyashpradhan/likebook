@@ -7,15 +7,19 @@ import {
 } from "../../server/helpers/urls";
 import PostCard from "../Post/PostCard";
 import { parseCookies } from "nookies";
+import axios from "axios";
 
 export default function FeedCard() {
   const { authState, authDispatch } = useAuth();
   const [content, setContent] = useState("");
 
+  console.log("State", authState);
+
   useEffect(() => {
     (async () => {
       try {
-        const res = await getAllPosts(authState.userDetails.userId);
+        const res = await getAllPosts(authState.userDetails.userId, 1, 3);
+        console.log(res);
         const resUser = await fetchAllUsers();
         authDispatch({ type: "SET_POSTS", payload: res.data.posts });
       } catch (error) {
@@ -25,6 +29,10 @@ export default function FeedCard() {
         }); */
         console.log(error);
       }
+
+      return () => {
+        axios.Cancel();
+      };
     })();
   }, []);
 
@@ -32,20 +40,18 @@ export default function FeedCard() {
     setContent(e.target.value);
   };
 
-  console.log("state", authState);
-
   const postSubmitHandler = async (e) => {
     e.preventDefault();
     const postedBy = authState.userDetails.userId;
     const { jwt } = parseCookies("jwt");
     const response = await addNewPost(postedBy, content, jwt);
     if (response.status === 200 || response.status === 200) {
-      authDispatch({ type: "SET_POSTS", payload: response.data.post });
+      authDispatch({ type: "ADD_POST", payload: response.data.post });
     } else {
-      authDispatch({
+      /* authDispatch({
         type: "SET_ERROR",
         payload: response.message,
-      });
+      }); */
     }
   };
 
