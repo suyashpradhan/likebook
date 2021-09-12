@@ -1,24 +1,30 @@
-import { BsHeart } from "react-icons/bs";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useAuth } from "../../context/auth-context/context";
 import { likePost, unlikePost } from "../../server/helpers/urls";
 import { parseCookies } from "nookies";
 
 export default function PostCard({ post }) {
+  console.log(post);
   const { authState, authDispatch } = useAuth();
   const { jwt } = parseCookies("jwt");
-  console.log(post);
+
   const handleToggleLike = async () => {
     const isPostLiked = post.likes.includes(authState.userDetails.userId);
     const functionToBeCalled = isPostLiked ? unlikePost : likePost;
-    const res = await functionToBeCalled(post._id, jwt);
-    /*     authDispatch({ type: "TOGGLE_LIKE", payload: res.post });
-     */ console.log(res.post);
+    const likedPost = await functionToBeCalled(post._id, jwt);
+    const postIndex = authState.posts.findIndex(
+      (singlePost) => singlePost._id === likedPost.post._id
+    );
+    authDispatch({
+      type: "UPDATE_POST",
+      payload: { postIndex, post: likedPost.post },
+    });
   };
 
   return (
     <>
-      <section className="flex items-center font-default justify-center px-4 mb-8 ">
-        <div className="bg-white md:w-full sm:w-full lg:w-2/3 rounded-lg shadow-lg p-8">
+      <section className="flex items-center justify-center font-default px-4 mb-8 ">
+        <div className="bg-background-light md:w-full sm:w-full lg:w-2/3 rounded-lg shadow-lg p-8">
           <div className="flex mb-8">
             <div>
               {/* <img
@@ -32,20 +38,26 @@ export default function PostCard({ post }) {
             </div>
 
             <div className="ml-3 flex flex-col w-full">
-              <h1 className="text-text-primary font-semibold">
+              <h1 className="text-text-primary font-semibold text-primary">
                 {post.postedBy.fullName}
               </h1>
-              <h2 className="text-text-secondary">{post.postedBy.userName}</h2>
+              <h2 className="text-secondary text-sm">
+                @{post.postedBy.userName}
+              </h2>
             </div>
           </div>
-          <p className="text-secondary tracking-normal text-md">
-            {post.content}
-          </p>
+          <p className="text-primary tracking-normal text-md">{post.content}</p>
           <div className="mt-2">
-            <button onClick={handleToggleLike}>
-              <BsHeart className="mt-8 w-6 h-6 text-danger cursor-pointer " />
-            </button>
-            <p className="mt-2 font-semibold text-secondary">0 Like(s)</p>
+            {post.likes.includes(authState.userDetails.userId) ? (
+              <button onClick={handleToggleLike}>
+                <BsHeartFill className="mt-8 w-6 h-6 text-danger cursor-pointer " />
+              </button>
+            ) : (
+              <button onClick={handleToggleLike}>
+                <BsHeart className="mt-8 w-6 h-6 text-danger cursor-pointer " />
+              </button>
+            )}
+            <p className="mt-2 text-secondary">{post.likes.length} Like(s)</p>
           </div>
         </div>
       </section>

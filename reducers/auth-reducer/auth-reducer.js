@@ -15,8 +15,10 @@ export const initialState = {
     userId: userId || "",
   },
   posts: [],
-  isPostLiked: false,
-  likesCount: 0,
+  postDetails: {
+    isPostLiked: false,
+    likesCount: 0,
+  },
 };
 
 export const authReducer = (state, action) => {
@@ -48,7 +50,17 @@ export const authReducer = (state, action) => {
     case actions.SET_POSTS:
       return {
         ...state,
-        posts: action.payload,
+        posts: [...action.payload],
+      };
+
+    case actions.UPDATE_POST:
+      return {
+        ...state,
+        posts: [
+          ...state.posts.slice(0, action.payload.postIndex),
+          action.payload.post,
+          ...state.posts.slice(action.payload.postIndex + 1),
+        ],
       };
 
     case actions.ADD_POST:

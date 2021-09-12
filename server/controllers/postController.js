@@ -29,18 +29,20 @@ exports.getAllPosts = async (req, res) => {
     const page = Number(req.query.page * 1 || 1);
     const limit = Number(req.query.limit * 1 || 10);
     const skipValue = Number((page - 1) * limit);
-
-    /* if (req.query.page) {
-      const postCount = await Post.countDocuments();
-      console.log(postCount);
-      if (skip > postCount) {
-        return new Error("You have reached the end of the page");
-      }
-    } */
-    const posts = await Post.find().skip(skipValue).limit(limit);
-    res
-      .status(200)
-      .json({ status: "success", message: "Fetched all posts", posts });
+    const postCount = await Post.countDocuments();
+    console.log(skipValue, typeof skipValue, postCount, typeof postCount);
+    if (skipValue > postCount) {
+      return res.status(200).json({
+        status: "success",
+        message: "You have reached the end of the page",
+        posts: [],
+      });
+    } else {
+      const posts = await Post.find().skip(skipValue).limit(limit);
+      return res
+        .status(200)
+        .json({ status: "success", message: "Fetched all posts", posts });
+    }
   } catch (error) {
     res.status(400).json({ status: "failed", message: "Something went wrong" });
   }

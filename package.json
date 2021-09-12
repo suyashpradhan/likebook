@@ -16,7 +16,6 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.3.0",
-    "express-validator": "^6.12.1",
     "helmet": "^4.6.0",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
@@ -27,7 +26,8 @@
     "nookies": "^2.5.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-icons": "^4.2.0"
+    "react-icons": "^4.2.0",
+    "react-infinite-scroll-component": "^6.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.3",

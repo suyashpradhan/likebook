@@ -37,7 +37,7 @@ export default function RegisterUserCard() {
   return (
     <div className="flex items-center min-h-screen font-default p-4 bg-background lg:justify-center">
       <div className="flex flex-col overflow-hidden bg-white rounded-md shadow-lg max md:flex-row md:flex-1 lg:max-w-screen-md">
-        <div className="p-4 py-6 text-white bg-blue-500 md:w-80 md:flex-shrink-0 md:flex md:flex-col md:items-center md:justify-evenly">
+        <div className="p-4 py-6 text-white bg-accent md:w-80 md:flex-shrink-0 md:flex md:flex-col md:items-center md:justify-evenly">
           <h2 className="my-3 text-4xl font-bold tracking-wider text-center">
             LikeBook
           </h2>
@@ -54,8 +54,8 @@ export default function RegisterUserCard() {
             </Link>
           </p>
         </div>
-        <div className="p-5 bg-white md:flex-1">
-          <h3 className="my-4 text-2xl font-semibold text-gray-700">
+        <div className="p-5 bg-background-light md:flex-1">
+          <h3 className="my-4 text-2xl font-semibold text-primary">
             Create an account
           </h3>
           <form
@@ -66,14 +66,14 @@ export default function RegisterUserCard() {
             <div className="flex flex-col space-y-1">
               <label
                 htmlFor="fullName"
-                className="text-sm font-semibold text-gray-500"
+                className="text-sm font-semibold text-secondary"
               >
                 Fullname
               </label>
               <input
                 type="text"
                 name="fullName"
-                className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
                 value={formInputs.fullName}
                 onChange={handleInputs}
               />
@@ -89,7 +89,7 @@ export default function RegisterUserCard() {
               <input
                 type="text"
                 name="userName"
-                className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
                 value={formInputs.username}
                 onChange={handleInputs}
               />
@@ -106,7 +106,7 @@ export default function RegisterUserCard() {
               <input
                 type="password"
                 name="password"
-                className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
                 value={formInputs.password}
                 onChange={handleInputs}
               />
@@ -115,9 +115,9 @@ export default function RegisterUserCard() {
             <div>
               <button
                 type="submit"
-                className="w-full px-4 py-3 text-lg uppercase font-bold  text-white  bg-primary rounded-md shadow focus:outline-none focus:ring-primary focus:ring-4 my-2"
+                className="w-full px-2 py-3 text-lg uppercase   text-white  bg-accent rounded-md shadow focus:outline-none focus:ring-primary focus:ring-1 my-2"
               >
-                Submit
+                Register
               </button>
             </div>
           </form>
