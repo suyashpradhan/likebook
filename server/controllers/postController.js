@@ -30,7 +30,6 @@ exports.getAllPosts = async (req, res) => {
     const limit = Number(req.query.limit * 1 || 10);
     const skipValue = Number((page - 1) * limit);
     const postCount = await Post.countDocuments();
-    console.log(skipValue, typeof skipValue, postCount, typeof postCount);
     if (skipValue > postCount) {
       return res.status(200).json({
         status: "success",

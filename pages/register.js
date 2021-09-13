@@ -1,9 +1,9 @@
-import RegisterUserCard from "../components/RegisterUserCard/RegisterUserCard";
+import Register from "../components/Register/Register";
 
 export default function Register() {
   return (
     <>
-      <RegisterUserCard />
+      <Register />
     </>
   );
 }

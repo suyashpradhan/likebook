@@ -1,21 +1,20 @@
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { useAuth } from "../../context/auth-context/context";
+import { useStateContext } from "../../context/context";
 import { likePost, unlikePost } from "../../server/helpers/urls";
 import { parseCookies } from "nookies";
 
 export default function PostCard({ post }) {
-  console.log(post);
-  const { authState, authDispatch } = useAuth();
+  const { state, dispatch } = useStateContext();
   const { jwt } = parseCookies("jwt");
 
   const handleToggleLike = async () => {
-    const isPostLiked = post.likes.includes(authState.userDetails.userId);
+    const isPostLiked = post.likes.includes(state.userDetails.userId);
     const functionToBeCalled = isPostLiked ? unlikePost : likePost;
     const likedPost = await functionToBeCalled(post._id, jwt);
-    const postIndex = authState.posts.findIndex(
+    const postIndex = state.posts.findIndex(
       (singlePost) => singlePost._id === likedPost.post._id
     );
-    authDispatch({
+    dispatch({
       type: "UPDATE_POST",
       payload: { postIndex, post: likedPost.post },
     });
@@ -48,7 +47,7 @@ export default function PostCard({ post }) {
           </div>
           <p className="text-primary tracking-normal text-md">{post.content}</p>
           <div className="mt-2">
-            {post.likes.includes(authState.userDetails.userId) ? (
+            {post.likes.includes(state.userDetails.userId) ? (
               <button onClick={handleToggleLike}>
                 <BsHeartFill className="mt-8 w-6 h-6 text-danger cursor-pointer " />
               </button>

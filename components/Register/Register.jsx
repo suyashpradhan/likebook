@@ -1,36 +1,39 @@
 import Link from "next/link";
-import { useState } from "react";
 import { registerUser } from "../../server/helpers/urls";
+import { useStateContext } from "../../context/context";
+import { useRouter } from "next/router";
 
 export default function RegisterUserCard() {
-  const [formInputs, setFormInputs] = useState({
-    fullName: "",
-    userName: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState("");
+  const { state, dispatch } = useStateContext();
+  const router = useRouter();
 
-  function handleInputs(e) {
-    setFormInputs((inputs) => {
-      return {
-        ...inputs,
-        [e.target.name]: e.target.value,
-      };
+  const handleTextInputs = (e) => {
+    dispatch({
+      type: "HANDLE_SIGNUP_INPUTS",
+      field: e.target.name,
+      payload: e.target.value,
     });
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await registerUser({
-      fullName: formInputs.fullName,
-      userName: formInputs.userName,
-      password: formInputs.password,
-    });
+    try {
+      const response = await registerUser({
+        fullName: state.fullName,
+        userName: state.userName,
+        password: state.password,
+      });
 
-    if (response.status === 201) {
-      console.log("Success");
-    } else {
-      setErrors(response.description);
+      if (response) {
+        return setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
+    } catch (error) {
+      dispatch({
+        type: "SET_ERRORS",
+        payload: response.message,
+      });
     }
   };
 
@@ -74,8 +77,8 @@ export default function RegisterUserCard() {
                 type="text"
                 name="fullName"
                 className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                value={formInputs.fullName}
-                onChange={handleInputs}
+                value={state.fullName}
+                onChange={handleTextInputs}
               />
             </div>
 
@@ -90,8 +93,8 @@ export default function RegisterUserCard() {
                 type="text"
                 name="userName"
                 className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                value={formInputs.username}
-                onChange={handleInputs}
+                value={state.userName}
+                onChange={handleTextInputs}
               />
             </div>
             <div className="flex flex-col space-y-1">
@@ -107,8 +110,8 @@ export default function RegisterUserCard() {
                 type="password"
                 name="password"
                 className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                value={formInputs.password}
-                onChange={handleInputs}
+                value={state.password}
+                onChange={handleTextInputs}
               />
             </div>
             <p>{errors}</p>

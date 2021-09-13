@@ -1,72 +1,17 @@
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/auth-context/context";
-import {
-  addNewPost,
-  getAllPosts,
-  fetchAllUsers,
-} from "../../server/helpers/urls";
+import { useStateContext } from "../../context/context";
+import { addNewPost, getAllPosts } from "../../server/helpers/urls";
 import PostCard from "../Post/PostCard";
 import { parseCookies } from "nookies";
-import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import EndOfPage from "../EndOfPage/EndOfPage";
 
 export default function FeedCard() {
-  const { authState, authDispatch } = useAuth();
+  const { state, dispatch } = useStateContext();
   const [content, setContent] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(2);
   const [hasMoreData, setHasMore] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await getAllPosts(
-          authState.userDetails.userId,
-          pageNumber,
-          5
-        );
-        await fetchAllUsers();
-        authDispatch({ type: "SET_POSTS", payload: res.data.posts });
-      } catch (error) {
-        authDispatch({
-          type: "SET_ERROR",
-          payload: res.message,
-        });
-        console.log(error);
-      }
-
-      return () => {
-        axios.Cancel();
-      };
-    })();
-  }, []);
-
-  /* const fetchPostsAndUsers = async () => {
-    try {
-      const res = await getAllPosts(
-        authState.userDetails.userId,
-        pageNumber,
-        5
-      );
-      await fetchAllUsers();
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  }; */
-
-  /* const fetchData = async () => {
-    const dataFromServer = await fetchPostsAndUsers();
-    console.log("Data", dataFromServer);
-    authDispatch({ type: "SET_POSTS", payload: dataFromServer.data.posts });
-
-    if (dataFromServer.data.posts.length === 0) {
-      setHasMore(false);
-    }
-
-    setPageNumber((page) => page + 1);
-  };
-
-   */
 
   const postInputHandle = (e) => {
     setContent(e.target.value);
@@ -74,22 +19,48 @@ export default function FeedCard() {
 
   const postSubmitHandler = async (e) => {
     e.preventDefault();
-    const postedBy = authState.userDetails.userId;
+    const postedBy = state.userDetails.userId;
     const { jwt } = parseCookies("jwt");
     const response = await addNewPost(postedBy, content, jwt);
     if (response.status === 200 || response.status === 200) {
-      authDispatch({ type: "ADD_POST", payload: response.data.post });
+      dispatch({ type: "ADD_POST", payload: response.data.post });
     } else {
-      authDispatch({
+      dispatch({
         type: "SET_ERRORS",
         payload: response.message,
       });
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await getAllPosts(state.userDetails.userId, 1, 7);
+        dispatch({ type: "SET_POSTS", payload: res.data.posts });
+      } catch (error) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: res.message,
+        });
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const fetchData = async () => {
+    const res = await getAllPosts(state.userDetails.userId, pageNumber, 7);
+    dispatch({ type: "SET_POSTS", payload: res.data.posts });
+    if (res.data.posts.length === 0) {
+      setHasMore(false);
+    }
+    setPageNumber((pageNumber) => pageNumber + 1);
+  };
+
+  console.log(state.posts);
+
   return (
     <>
-      {authState.posts.length < 0 ? (
+      {state.posts.length < 0 ? (
         <p>nothing to show</p>
       ) : (
         <>
@@ -126,21 +97,24 @@ export default function FeedCard() {
               </div>
             </div>
           </section>
-          <p className="text-lg">{authState.posts.length}</p>
-          {/* <InfiniteScroll
-            dataLength={authState.posts.length}
+          <p className="text-lg text-white">{state.posts.length}</p>
+          <InfiniteScroll
+            dataLength={state.posts.length}
             next={fetchData}
             hasMore={hasMoreData}
-            loader={<p>loading</p>}
-            endMessage={<h1>nothing...</h1>}
+            loader={
+              <SkeletonTheme color="#202020" highlightColor="#444">
+                <p>
+                  <Skeleton count={3} />
+                </p>
+              </SkeletonTheme>
+            }
+            endMessage={<EndOfPage />}
           >
-            {authState.posts.map((post) => (
+            {state.posts.map((post) => (
               <PostCard key={post._id} post={post} />
             ))}
-          </InfiniteScroll> */}
-          {authState.posts.map((post) => (
-            <PostCard key={post._id} post={post} />
-          ))}
+          </InfiniteScroll>
         </>
       )}
     </>

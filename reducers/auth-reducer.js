@@ -2,11 +2,7 @@ import * as actions from "./reducer.actions";
 import { parseCookies } from "nookies";
 const { isLoggedIn, userName, fullName, userId } = parseCookies("jwt");
 
-const isAlreadyAdded = (stateArray, id) => {
-  console.log(stateArray, id);
-  /* return stateArray.some((likeId) => likeId === id); */
-};
-
+// State Initial State
 export const initialState = {
   userDetails: {
     isLoggedIn: isLoggedIn || false,
@@ -15,15 +11,13 @@ export const initialState = {
     userId: userId || "",
   },
   posts: [],
-  postDetails: {
-    isPostLiked: false,
-    likesCount: 0,
-  },
 };
 
-export const authReducer = (state, action) => {
+// State Reducer Function
+export const stateReducer = (state, action) => {
   switch (action.type) {
     case actions.HANDLE_INPUTS:
+      console.log(action.payload);
       return {
         ...state,
         [action.field]: action.payload,
@@ -40,17 +34,10 @@ export const authReducer = (state, action) => {
         },
       };
 
-    case actions.SET_LOGOUT:
-      return {
-        ...state,
-        isLoggedIn: false,
-        userAuthToken: null,
-      };
-
     case actions.SET_POSTS:
       return {
         ...state,
-        posts: [...action.payload],
+        posts: state.posts.concat(action.payload),
       };
 
     case actions.UPDATE_POST:
@@ -69,8 +56,7 @@ export const authReducer = (state, action) => {
         posts: state.posts.concat(action.payload),
       };
 
-    case "TOGGLE_LIKE":
-      console.log("Statelikes", state.posts);
+    case actions.TOGGLE_LIKE:
       return {
         ...state,
         likesCount: action.payload.likes.length,
@@ -80,6 +66,19 @@ export const authReducer = (state, action) => {
       return {
         ...state,
         errors: action.payload,
+      };
+
+    case actions.SET_LOGOUT:
+      console.log(action.payload);
+      return {
+        ...state,
+        posts: action.payload,
+        userDetails: {
+          isLoggedIn: false,
+          userName: "",
+          fullName: "",
+          userId: "",
+        },
       };
 
     default:
