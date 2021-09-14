@@ -3,31 +3,30 @@ import { useStateContext } from "../../context/context";
 import { loginUser } from "../../server/helpers/urls";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { useState } from "react";
 
-// LoginCard Component
+// Login Component
 export default function Login() {
-  const { state, dispatch } = useStateContext();
+  const { dispatch } = useStateContext();
+  const [formInputs, setFormInputs] = useState({
+    userName: "",
+    password: "",
+  });
   const router = useRouter();
-
-  console.log(state);
 
   // Function to get text inputs value
   const handleTextInputs = (e) => {
-    dispatch({
-      type: "HANDLE_INPUTS",
-      field: e.target.name,
-      payload: e.target.value,
-    });
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   };
 
   // Submit Handler for user login
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const { data } = await loginUser({
-      userName: state.userName,
-      password: state.password,
+      userName: formInputs.userName,
+      password: formInputs.password,
     });
-    console.log(data);
+    console.log("data", data);
     if (data) {
       dispatch({
         type: "SET_LOGIN",
@@ -40,6 +39,7 @@ export default function Login() {
         },
       });
 
+      // Setting State Values into Brower Cookie
       Cookies.set("isLoggedIn", true);
       Cookies.set("jwt", data.token);
       Cookies.set("userName", data.user.userName);
@@ -49,7 +49,7 @@ export default function Login() {
     } else {
       /* dispatch({
         type: "SET_ERRORS",
-        payload: response.message,
+        payload: data.message,
       }); */
     }
   };
@@ -87,9 +87,9 @@ export default function Login() {
                   Username
                 </label>
                 <input
-                  type="userName"
+                  type="text"
                   name="userName"
-                  value={state.userName}
+                  value={formInputs.userName}
                   onChange={handleTextInputs}
                   className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
                 />
@@ -103,13 +103,11 @@ export default function Login() {
                 <input
                   type="password"
                   name="password"
-                  value={state.password}
+                  value={formInputs.password}
                   onChange={handleTextInputs}
                   className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                  autoComplete="true"
                 />
               </div>
-              <p>{state.errors}</p>
               <div>
                 <button
                   type="submit"

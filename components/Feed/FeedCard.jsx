@@ -56,12 +56,10 @@ export default function FeedCard() {
     setPageNumber((pageNumber) => pageNumber + 1);
   };
 
-  console.log(state.posts);
-
   return (
     <>
-      {state.posts.length < 0 ? (
-        <p>nothing to show</p>
+      {state.posts.length <= 0 ? (
+        <p className="text-white">nothing to show</p>
       ) : (
         <>
           <section className=" flex items-center font-default justify-center px-4 ">
@@ -97,18 +95,10 @@ export default function FeedCard() {
               </div>
             </div>
           </section>
-          <p className="text-lg text-white">{state.posts.length}</p>
           <InfiniteScroll
             dataLength={state.posts.length}
             next={fetchData}
             hasMore={hasMoreData}
-            loader={
-              <SkeletonTheme color="#202020" highlightColor="#444">
-                <p>
-                  <Skeleton count={3} />
-                </p>
-              </SkeletonTheme>
-            }
             endMessage={<EndOfPage />}
           >
             {state.posts.map((post) => (

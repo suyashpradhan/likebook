@@ -2,38 +2,38 @@ import Link from "next/link";
 import { registerUser } from "../../server/helpers/urls";
 import { useStateContext } from "../../context/context";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
-export default function RegisterUserCard() {
-  const { state, dispatch } = useStateContext();
+export default function Register() {
+  const { dispatch } = useStateContext();
+  const [formInputs, setFormInputs] = useState({
+    fullName: "",
+    userName: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState("");
   const router = useRouter();
 
+  // Function to get text inputs value
   const handleTextInputs = (e) => {
-    dispatch({
-      type: "HANDLE_SIGNUP_INPUTS",
-      field: e.target.name,
-      payload: e.target.value,
-    });
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   };
 
+  // Submit Handler for user signup
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await registerUser({
-        fullName: state.fullName,
-        userName: state.userName,
-        password: state.password,
-      });
+    const response = await registerUser({
+      fullName: formInputs.fullName,
+      userName: formInputs.userName,
+      password: formInputs.password,
+    });
 
-      if (response) {
-        return setTimeout(() => {
-          router.push("/login");
-        }, 2000);
-      }
-    } catch (error) {
-      dispatch({
-        type: "SET_ERRORS",
-        payload: response.message,
-      });
+    if (response.status === 201) {
+      return setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } else {
+      setErrors(response.message);
     }
   };
 
@@ -58,51 +58,38 @@ export default function RegisterUserCard() {
           </p>
         </div>
         <div className="p-5 bg-background-light md:flex-1">
-          <h3 className="my-4 text-2xl font-semibold text-primary">
+          <h3 className="mt-4 mb-8 text-2xl font-semibold text-primary">
             Create an account
           </h3>
-          <form
-            onSubmit={handleSubmit}
-            action="#"
-            className="flex flex-col space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
             <div className="flex flex-col space-y-1">
-              <label
-                htmlFor="fullName"
-                className="text-sm font-semibold text-secondary"
-              >
+              <label htmlFor="fullName" className="text-sm  text-secondary">
                 Fullname
               </label>
               <input
                 type="text"
                 name="fullName"
                 className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                value={state.fullName}
+                value={formInputs.fullName}
                 onChange={handleTextInputs}
               />
             </div>
 
             <div className="flex flex-col space-y-1">
-              <label
-                for="userName"
-                className="text-sm font-semibold text-gray-500"
-              >
+              <label for="userName" className="text-sm  text-secondary">
                 Username
               </label>
               <input
                 type="text"
                 name="userName"
                 className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                value={state.userName}
+                value={formInputs.userName}
                 onChange={handleTextInputs}
               />
             </div>
             <div className="flex flex-col space-y-1">
               <div className="flex items-center justify-between">
-                <label
-                  for="password"
-                  className="text-sm font-semibold text-gray-500"
-                >
+                <label for="password" className="text-sm  text-secondary">
                   Password
                 </label>
               </div>
@@ -110,11 +97,12 @@ export default function RegisterUserCard() {
                 type="password"
                 name="password"
                 className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
-                value={state.password}
+                value={formInputs.password}
                 onChange={handleTextInputs}
               />
             </div>
-            <p>{errors}</p>
+
+            <p className="text-secondary text-center my-4">{errors}</p>
             <div>
               <button
                 type="submit"

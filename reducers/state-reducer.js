@@ -15,14 +15,8 @@ export const initialState = {
 
 // State Reducer Function
 export const stateReducer = (state, action) => {
+  console.log("Payload", action.payload.userDetails);
   switch (action.type) {
-    case actions.HANDLE_INPUTS:
-      console.log(action.payload);
-      return {
-        ...state,
-        [action.field]: action.payload,
-      };
-
     case actions.SET_LOGIN:
       return {
         ...state,
