@@ -38,9 +38,11 @@ exports.getAllPosts = async (req, res) => {
       });
     } else {
       const posts = await Post.find().skip(skipValue).limit(limit);
-      return res
-        .status(200)
-        .json({ status: "success", message: "Fetched all posts", posts });
+      return res.status(200).json({
+        status: "success",
+        message: "Fetched all posts",
+        posts,
+      });
     }
   } catch (error) {
     res.status(400).json({ status: "failed", message: "Something went wrong" });

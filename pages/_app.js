@@ -1,5 +1,5 @@
 import "tailwindcss/tailwind.css";
-import { StateContextProvider } from "../context/context";
+import { StateContextProvider } from "../context/state-context";
 
 function MyApp({ Component, pageProps }) {
   return (

@@ -1,6 +1,6 @@
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useEffect, useState } from "react";
-import { useStateContext } from "../../context/context";
+import { useStateContext } from "../../context/state-context";
 import { addNewPost, getAllPosts } from "../../server/helpers/urls";
 import PostCard from "../Post/PostCard";
 import { parseCookies } from "nookies";
@@ -23,10 +23,10 @@ export default function FeedCard() {
     const { jwt } = parseCookies("jwt");
     const response = await addNewPost(postedBy, content, jwt);
     if (response.status === 200 || response.status === 200) {
-      dispatch({ type: "ADD_POST", payload: response.data.post });
+      dispatch({ type: "ADD_A_NEW_POST", payload: response.data.post });
     } else {
       dispatch({
-        type: "SET_ERRORS",
+        type: "SET_ERROR_MESSAGES",
         payload: response.message,
       });
     }
@@ -36,12 +36,12 @@ export default function FeedCard() {
     (async () => {
       try {
         const res = await getAllPosts(state.userDetails.userId, 1, 7);
-        dispatch({ type: "SET_POSTS", payload: res.data.posts });
+        dispatch({ type: "FETCH_POSTS_FROM_API", payload: res.data.posts });
       } catch (error) {
-        dispatch({
-          type: "SET_ERROR",
+        /* dispatch({
+          type: "SET_ERROR_MESSAGES",
           payload: res.message,
-        });
+        }); */
         console.log(error);
       }
     })();
@@ -49,7 +49,7 @@ export default function FeedCard() {
 
   const fetchData = async () => {
     const res = await getAllPosts(state.userDetails.userId, pageNumber, 7);
-    dispatch({ type: "SET_POSTS", payload: res.data.posts });
+    dispatch({ type: "FETCH_POSTS_FROM_API", payload: res.data.posts });
     if (res.data.posts.length === 0) {
       setHasMore(false);
     }
@@ -58,7 +58,7 @@ export default function FeedCard() {
 
   return (
     <>
-      {state.posts.length <= 0 ? (
+      {state.posts.length < 0 ? (
         <p className="text-white">nothing to show</p>
       ) : (
         <>

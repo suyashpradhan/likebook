@@ -1,5 +1,5 @@
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { useStateContext } from "../../context/context";
+import { useStateContext } from "../../context/state-context";
 import { likePost, unlikePost } from "../../server/helpers/urls";
 import { parseCookies } from "nookies";
 
@@ -15,7 +15,7 @@ export default function PostCard({ post }) {
       (singlePost) => singlePost._id === likedPost.post._id
     );
     dispatch({
-      type: "UPDATE_POST",
+      type: "UPDATE_A_SINGLE_POST",
       payload: { postIndex, post: likedPost.post },
     });
   };

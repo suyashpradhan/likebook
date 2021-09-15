@@ -4,24 +4,23 @@ const { isLoggedIn, userName, fullName, userId } = parseCookies("jwt");
 
 // State Initial State
 export const initialState = {
+  isLoggedIn: false,
   userDetails: {
-    isLoggedIn: isLoggedIn || false,
-    userName: userName || "",
-    fullName: fullName || "",
-    userId: userId || "",
+    userName: "",
+    fullName: "",
+    userId: "",
   },
   posts: [],
 };
 
 // State Reducer Function
 export const stateReducer = (state, action) => {
-  console.log("Payload", action.payload.userDetails);
   switch (action.type) {
     case actions.SET_LOGIN:
       return {
         ...state,
+        isLoggedIn: !state.isLoggedIn,
         userDetails: {
-          isLoggedIn: !state.isLoggedIn,
           userName: action.payload.userDetails.userName,
           fullName: action.payload.userDetails.fullName,
           userId: action.payload.userDetails.userId,
@@ -63,12 +62,11 @@ export const stateReducer = (state, action) => {
       };
 
     case actions.SET_LOGOUT:
-      console.log(action.payload);
       return {
         ...state,
         posts: action.payload,
+        isLoggedIn: false,
         userDetails: {
-          isLoggedIn: false,
           userName: "",
           fullName: "",
           userId: "",

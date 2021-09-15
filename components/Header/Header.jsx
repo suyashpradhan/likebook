@@ -1,11 +1,11 @@
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useStateContext } from "../../context/context";
+import { useStateContext } from "../../context/state-context";
 
 export default function Header() {
-  const router = useRouter();
   const { dispatch } = useStateContext();
+  const router = useRouter();
 
   const logoutHandler = () => {
     Cookies.remove("jwt");
@@ -13,7 +13,7 @@ export default function Header() {
     Cookies.remove("fullName");
     Cookies.remove("isLoggedIn");
     Cookies.remove("userId");
-    dispatch({ type: "CLEAR_DATA", payload: [] });
+    dispatch({ type: "CLEAR_STATE_DATA", payload: [] });
     router.push("/");
   };
 

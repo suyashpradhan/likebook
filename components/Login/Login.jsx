@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useStateContext } from "../../context/context";
+import { useStateContext } from "../../context/state-context";
 import { loginUser } from "../../server/helpers/urls";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
@@ -16,36 +16,35 @@ export default function Login() {
 
   // Function to get text inputs value
   const handleTextInputs = (e) => {
-    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+    return setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   };
 
   // Submit Handler for user login
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await loginUser({
+    const response = await loginUser({
       userName: formInputs.userName,
       password: formInputs.password,
     });
-    console.log("data", data);
-    if (data) {
+    if (response.status === 201) {
       dispatch({
-        type: "SET_LOGIN",
+        type: "SET_USER_LOGIN_DETAILS",
         payload: {
           userDetails: {
-            userName: data.user.userName,
-            fullName: data.user.fullName,
-            userId: data.user._id,
+            userName: response.data.user.userName,
+            fullName: response.data.user.fullName,
+            userId: response.data.user._id,
           },
         },
       });
+      router.push("/user/feed");
 
       // Setting State Values into Brower Cookie
       Cookies.set("isLoggedIn", true);
-      Cookies.set("jwt", data.token);
-      Cookies.set("userName", data.user.userName);
-      Cookies.set("fullName", data.user.fullName);
-      Cookies.set("userId", data.user._id);
-      router.push("/user/feed");
+      Cookies.set("jwt", response.data.token);
+      Cookies.set("userName", response.data.user.userName);
+      Cookies.set("fullName", response.data.user.fullName);
+      Cookies.set("userId", response.data.user._id);
     } else {
       /* dispatch({
         type: "SET_ERRORS",

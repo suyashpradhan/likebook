@@ -1,5 +1,5 @@
-export const SET_LOGIN = "SET_USER_LOGIN";
-export const SET_LOGOUT = "CLEAR_STATE_DATE";
+export const SET_LOGIN = "SET_USER_LOGIN_DETAILS";
+export const SET_LOGOUT = "CLEAR_STATE_DATA";
 export const SET_ERRORS = "SET_ERROR_MESSAGES";
 export const SET_POSTS = "FETCH_POSTS_FROM_API";
 export const ADD_POST = "ADD_A_NEW_POST";
