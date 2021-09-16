@@ -55,7 +55,10 @@ exports.loginUser = async (req, res) => {
       return true;
     }
 
-    const user = await User.findOne({ userName }).select("+password");
+    const user = await User.findOne({ userName }).select(
+      "+password -createdAt -updatedAt -__v"
+    );
+    console.log(user);
 
     if (!user || !(await user.checkPassword(password, user.password))) {
       res.status(401).json({
@@ -70,7 +73,11 @@ exports.loginUser = async (req, res) => {
       status: "success",
       message: "Login Successful!",
       token,
-      user,
+      user: {
+        userName: user.userName,
+        fullName: user.fullName,
+        _id: user._id,
+      },
     });
   } catch (err) {
     res.status(500).json({

@@ -2,40 +2,46 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { useStateContext } from "../../context/state-context";
 import { likePost, unlikePost } from "../../server/helpers/urls";
 import { parseCookies } from "nookies";
+import { getInitials } from "../../utils/getInitials.util";
+import { useState } from "react";
 
+// Post Card Component
 export default function PostCard({ post }) {
+  const [error, setError] = useState("");
   const { state, dispatch } = useStateContext();
   const { jwt } = parseCookies("jwt");
 
+  // Function for toggling like button
   const handleToggleLike = async () => {
-    const isPostLiked = post.likes.includes(state.userDetails.userId);
-    const functionToBeCalled = isPostLiked ? unlikePost : likePost;
-    const likedPost = await functionToBeCalled(post._id, jwt);
-    const postIndex = state.posts.findIndex(
-      (singlePost) => singlePost._id === likedPost.post._id
-    );
-    dispatch({
-      type: "UPDATE_A_SINGLE_POST",
-      payload: { postIndex, post: likedPost.post },
-    });
+    try {
+      const isPostLiked = post.likes.includes(state.userDetails.userId);
+      const functionToBeCalled = isPostLiked ? unlikePost : likePost;
+      const likedPost = await functionToBeCalled(post._id, jwt);
+      const postIndex = state.posts.findIndex(
+        (singlePost) => singlePost._id === likedPost.post._id
+      );
+      dispatch({
+        type: "UPDATE_A_SINGLE_POST",
+        payload: { postIndex, post: likedPost.post },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  // Getting initials of name for displaying it in UI
+  const initials = getInitials(post.postedBy.fullName);
 
   return (
     <>
-      <section className="flex items-center justify-center font-default px-4 mb-8 ">
+      <section className="flex items-center justify-center font-default sm:w-full px-4 mb-8 ">
         <div className="bg-background-light md:w-full sm:w-full lg:w-2/3 rounded-lg shadow-lg p-8">
           <div className="flex mb-8">
             <div>
-              {/* <img
-                className="rounded-full w-14"
-                name={`${post.postedBy.fullName}`}
-                src="https://bit.ly/broken-link"
-              /> */}
-              {/* <div className="border-primary border-2 bg-warning-light text-warning w-12 h-12 mr-8 rounded-full inline-flex items-center align-middle justify-center font-bold text-lg">
-                {post.postedBy.fullName.split(" ").substr(0).join("")}
-              </div> */}
+              <div class="m-1 mr-2 w-12 h-12 relative flex justify-center items-center rounded-full bg-accent text-xl text-white uppercase">
+                {initials}
+              </div>
             </div>
-
             <div className="ml-3 flex flex-col w-full">
               <h1 className="text-text-primary font-semibold text-primary">
                 {post.postedBy.fullName}

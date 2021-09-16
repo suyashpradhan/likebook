@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-
 const { Schema } = mongoose;
 
+// Posts Schema
 const PostSchema = new Schema(
   {
     postedBy: {
@@ -21,6 +21,7 @@ const PostSchema = new Schema(
   { timestamps: true }
 );
 
+// Autopopulating Fields
 const autoPopulatePostedBy = function (next) {
   this.populate("postedBy", "_id fullName userName");
   next();

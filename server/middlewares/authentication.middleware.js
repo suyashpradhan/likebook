@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+// Authentication Middleware for verifying token
 const authMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
@@ -13,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
         .json({ success: false, message: "User is not logged in" });
     }
 
-    const { _id } = jwt.verify(token, "my-secret-token-is-very-hard-to-guess");
+    const { _id } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById({ _id }).select("-password -__v");
     if (!user) {
       return res.status(400).json({

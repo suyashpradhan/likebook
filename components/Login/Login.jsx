@@ -7,11 +7,13 @@ import { useState } from "react";
 
 // Login Component
 export default function Login() {
-  const { dispatch } = useStateContext();
+  const { state, dispatch } = useStateContext();
   const [formInputs, setFormInputs] = useState({
     userName: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   // Function to get text inputs value
@@ -22,6 +24,7 @@ export default function Login() {
   // Submit Handler for user login
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = await loginUser({
       userName: formInputs.userName,
       password: formInputs.password,
@@ -37,6 +40,7 @@ export default function Login() {
           },
         },
       });
+      setLoading(false);
       router.push("/user/feed");
 
       // Setting State Values into Brower Cookie
@@ -46,10 +50,11 @@ export default function Login() {
       Cookies.set("fullName", response.data.user.fullName);
       Cookies.set("userId", response.data.user._id);
     } else {
-      /* dispatch({
-        type: "SET_ERRORS",
-        payload: data.message,
-      }); */
+      dispatch({
+        type: "SET_ERROR_MESSAGES",
+        payload: response.message,
+      });
+      setLoading(false);
     }
   };
 
@@ -62,8 +67,8 @@ export default function Login() {
               LikeBook
             </h2>
             <p className="mt-6 font-normal text-center text-white md:mt-0">
-              With the power of K-WD, you can now focus only on functionaries
-              for your digital products, while leaving the UI design on us!
+              A Scable Like System like Facebook where multiple users can post
+              their messages and like/unlike other users posts
             </p>
             <p className="flex flex-col items-center justify-center mt-10 text-center">
               <span>Dont have an account?</span>
@@ -107,12 +112,14 @@ export default function Login() {
                   className="px-4 py-2 transition duration-300 bg-background rounded-md  focus:border-transparent focus:outline-none text-white focus:ring-1 focus:ring-accent-200"
                 />
               </div>
+              <p className="text-secondary text-center my-4">{state.errors}</p>
               <div>
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 text-lg uppercase font-bold  text-white  bg-accent rounded-md shadow focus:outline-none focus:ring-primary focus:ring-1 my-2"
+                  disabled={loading ? true : false}
+                  className="w-full px-4 py-3 text-lg uppercase  text-white  bg-accent rounded-md shadow focus:outline-none focus:ring-primary focus:ring-1 my-2"
                 >
-                  Log in
+                  {loading ? "Signing in..." : "Sign in"}
                 </button>
               </div>
             </form>

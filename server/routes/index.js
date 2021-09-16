@@ -20,7 +20,6 @@ router.post(
 );
 
 router.get("/api/posts/feed", postController.getAllPosts);
-
 router.put("/api/posts/like", authMiddleware, postController.toggleLike);
 router.put("/api/posts/unlike", authMiddleware, postController.toggleLike);
 

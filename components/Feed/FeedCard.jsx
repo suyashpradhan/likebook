@@ -6,16 +6,16 @@ import PostCard from "../Post/PostCard";
 import { parseCookies } from "nookies";
 import InfiniteScroll from "react-infinite-scroll-component";
 import EndOfPage from "../EndOfPage/EndOfPage";
+import { getInitials } from "../../utils/getInitials.util";
 
 export default function FeedCard() {
   const { state, dispatch } = useStateContext();
   const [content, setContent] = useState("");
   const [pageNumber, setPageNumber] = useState(2);
   const [hasMoreData, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const postInputHandle = (e) => {
-    setContent(e.target.value);
-  };
+  const initials = getInitials(state.userDetails.fullName);
 
   const postSubmitHandler = async (e) => {
     e.preventDefault();
@@ -38,11 +38,10 @@ export default function FeedCard() {
         const res = await getAllPosts(state.userDetails.userId, 1, 7);
         dispatch({ type: "FETCH_POSTS_FROM_API", payload: res.data.posts });
       } catch (error) {
-        /* dispatch({
+        dispatch({
           type: "SET_ERROR_MESSAGES",
           payload: res.message,
-        }); */
-        console.log(error);
+        });
       }
     })();
   }, []);
@@ -66,28 +65,27 @@ export default function FeedCard() {
             <div className="rounded-xl my-16 border-background-light border-2  w-full md:w-3/3 lg:w-2/3">
               <div className="flex p-4">
                 <div>
-                  <img
-                    className="rounded-full w-14"
-                    src="https://pbs.twimg.com/profile_images/1367267802940375042/H4JDd6aC_400x400.jpg"
-                  />
+                  <div class="m-1 mr-2 w-12 h-12 relative flex justify-center items-center rounded-full bg-accent text-xl text-white uppercase">
+                    {initials}
+                  </div>
                 </div>
 
                 <div className="ml-3 flex flex-col w-full">
                   <textarea
                     placeholder="What's the latest?"
                     className="w-full text-lg resize-none outline-none bg-background-light h-32 p-4 text-primary rounded-md"
-                    onChange={postInputHandle}
+                    onChange={(e) => setContent(e.target.value)}
                   ></textarea>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center border-background-light py-6 px-4 border-t">
-                <h2 className="text-secondary">Total Characters : 0 / 280</h2>
+              <div className="flex justify-end items-center border-background-light py-6 px-4 border-t">
                 <div>
                   <button
                     type="submit"
-                    className="w-full px-4 py-3 text-md  text-white  bg-accent rounded-md shadow focus:outline-none focus:ring-primary focus:ring-1 my-2"
+                    className="w-full px-4 py-3 text-md uppercase  text-white  bg-accent rounded-md shadow focus:outline-none focus:ring-primary focus:ring-1 my-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={postSubmitHandler}
+                    disabled={content.length <= 0 ? true : false}
                   >
                     Post Your Message
                   </button>

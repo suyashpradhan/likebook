@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { registerUser } from "../../server/helpers/urls";
-import { useStateContext } from "../../context/context";
+import { useStateContext } from "../../context/state-context";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -45,8 +45,8 @@ export default function Register() {
             LikeBook
           </h2>
           <p className="mt-6 font-normal text-center text-gray-300 md:mt-0">
-            With the power of K-WD, you can now focus only on functionaries for
-            your digital products, while leaving the UI design on us!
+            A Scable Like System like Facebook where multiple users can post
+            their messages and like/unlike other users posts
           </p>
           <p className="flex flex-col items-center justify-center mt-10 text-center">
             <span>Already have an account?</span>
@@ -89,7 +89,7 @@ export default function Register() {
             </div>
             <div className="flex flex-col space-y-1">
               <div className="flex items-center justify-between">
-                <label for="password" className="text-sm  text-secondary">
+                <label for="password" className="text-sm text-secondary">
                   Password
                 </label>
               </div>

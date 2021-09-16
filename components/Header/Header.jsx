@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useStateContext } from "../../context/state-context";
 
 export default function Header() {
-  const { dispatch } = useStateContext();
+  const { state, dispatch } = useStateContext();
   const router = useRouter();
 
   const logoutHandler = () => {
@@ -27,19 +27,19 @@ export default function Header() {
                 <a>LikeBook</a>
               </Link>
             </div>
-            <div className="block">
-              <div className="ml-4 flex items-center md:ml-6">
-                <div className="ml-3 relative">
-                  <div className="relative inline-block text-left">
-                    {/* <h2>Hello, {Cookies.get("fullName")}</h2> */}
-                    <button
-                      className="px-5 py-2 text-lg text-white border-danger border-2 rounded-md shadow focus:outline-none focus:ring-danger focus:ring-1 my-2"
-                      onClick={logoutHandler}
-                    >
-                      {" "}
-                      Logout
-                    </button>
-                  </div>
+            <div className="">
+              <div className="ml-4 md:ml-6">
+                <div className="ml-3 flex space-between items-center">
+                  <h2 className="block text-white text-lg mr-4">
+                    Welcome, {state.userDetails.fullName}
+                  </h2>
+                  <button
+                    className="px-5 py-2 text-lg text-white border-danger border-2 rounded-md shadow focus:outline-none focus:ring-danger focus:ring-1 my-2"
+                    onClick={logoutHandler}
+                  >
+                    {" "}
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>

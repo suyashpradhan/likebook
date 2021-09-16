@@ -6,11 +6,12 @@ const { isLoggedIn, userName, fullName, userId } = parseCookies("jwt");
 export const initialState = {
   isLoggedIn: false,
   userDetails: {
-    userName: "",
-    fullName: "",
-    userId: "",
+    userName: userName || "",
+    fullName: fullName || "",
+    userId: userId || "",
   },
   posts: [],
+  errors: "",
 };
 
 // State Reducer Function
@@ -71,6 +72,7 @@ export const stateReducer = (state, action) => {
           fullName: "",
           userId: "",
         },
+        errors: "",
       };
 
     default:
