@@ -1,6 +1,6 @@
 # Facebook Like System
 
-A Scable `Like System` like Facebook where multiple users can post their messages and like/unlike other users posts
+A Scalable `Like System` like Facebook where multiple users can post their messages and like/unlike other users posts
 
 <b>Live App Link</b>:
 
