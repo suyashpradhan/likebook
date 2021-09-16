@@ -2,6 +2,14 @@
 
 A Scable `Like System` like Facebook where multiple users can post their messages and like/unlike other users posts
 
+<b>Live App Link</b>:
+
+## <u>App Screens</u>:
+### Login
+![login screen](https://like-system.s3.ap-south-1.amazonaws.com/login.PNG)
+
+### User Feed
+![user feed](https://like-system.s3.ap-south-1.amazonaws.com/feed.PNG)
 
 ## Tech Stack
 
@@ -29,5 +37,4 @@ A Scable `Like System` like Facebook where multiple users can post their message
 6. jsonwebtoken
 7. express-rate-limit
 8. mongoose
-9. next-nprogress
-10. react-infinite-scroll-component
+9.  react-infinite-scroll-component
