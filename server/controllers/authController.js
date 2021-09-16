@@ -58,7 +58,6 @@ exports.loginUser = async (req, res) => {
     const user = await User.findOne({ userName }).select(
       "+password -createdAt -updatedAt -__v"
     );
-    console.log(user);
 
     if (!user || !(await user.checkPassword(password, user.password))) {
       res.status(401).json({
