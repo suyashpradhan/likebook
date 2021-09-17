@@ -7,7 +7,7 @@ module.exports = {
     JWT_COOKIE_EXPIRY: process.env.JWT_COOKIE_EXPIRY,
     PRODUCTION_URL:
       process.env.NODE_ENV === "production"
-        ? "http://localhost:3000"
+        ? `http://localhost:${process.env.PORT}`
         : "https://ss",
   },
 };
