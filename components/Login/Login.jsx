@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { useStateContext } from "../../context/state-context";
-import { loginUser } from "../../server/helpers/urls";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import axios from "axios";
 
 // Login Component
 export default function Login() {
@@ -25,11 +25,13 @@ export default function Login() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const response = await loginUser({
-      userName: formInputs.userName,
-      password: formInputs.password,
-    });
-    if (response.status === 201) {
+
+    try {
+      const response = await axios.post("/api/auth/login", {
+        userName: formInputs.userName,
+        password: formInputs.password,
+      });
+
       dispatch({
         type: "SET_USER_LOGIN_DETAILS",
         payload: {
@@ -49,10 +51,10 @@ export default function Login() {
       Cookies.set("userName", response.data.user.userName);
       Cookies.set("fullName", response.data.user.fullName);
       Cookies.set("userId", response.data.user._id);
-    } else {
+    } catch (error) {
       dispatch({
         type: "SET_ERROR_MESSAGES",
-        payload: response.message,
+        payload: error.response.data.message,
       });
       setLoading(false);
     }
