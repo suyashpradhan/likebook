@@ -13,8 +13,9 @@ dbConnection();
 const routes = require("./routes");
 
 const dev = process.env.NODE_ENV !== "production";
-const port = process.env.PORT || 3000;
-const ROOT_URL = dev ? process.env.PRODUCTION_URL : `http://localhost:${port}`;
+const ROOT_URL = dev
+  ? process.env.PRODUCTION_URL
+  : `http://localhost:${process.env.PORT || 3000}`;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
