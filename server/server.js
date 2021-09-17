@@ -12,13 +12,9 @@ require("./models/user.model");
 dbConnection();
 const routes = require("./routes");
 
-console.log(process.env.NODE_ENV);
-
 const dev = process.env.NODE_ENV !== "production";
-console.log("dev", dev);
 const port = process.env.PORT || 3000;
-const ROOT_URL = dev ? `http://localhost:${port}` : process.env.PRODUCTION_URL;
-console.log("prod", process.env.PRODUCTION_URL);
+const ROOT_URL = dev ? process.env.PRODUCTION_URL : `http://localhost:${port}`;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
