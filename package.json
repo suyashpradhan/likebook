@@ -6,7 +6,6 @@
     "dev": "nodemon server/server.js --watch server",
     "build": "next build",
     "deploy": "next --public",
-    "alias": "next alias",
     "start": "node server/app.js",
     "lint": "next lint"
   },

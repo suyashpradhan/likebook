@@ -12,6 +12,8 @@ require("./models/user.model");
 dbConnection();
 const routes = require("./routes");
 
+console.log(process.env.NODE_ENV);
+
 const dev = process.env.NODE_ENV !== "production";
 const port = process.env.PORT || 3000;
 const ROOT_URL = dev ? `http://localhost:${port}` : process.env.PRODUCTION_URL;
