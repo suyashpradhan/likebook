@@ -15,7 +15,8 @@ const routes = require("./routes");
 const dev = process.env.NODE_ENV !== "production";
 const ROOT_URL = dev
   ? process.env.NEXT_PUBLIC_PRODUCTION_URL
-  : `http://localhost:${process.env.PORT || 3000}`;
+  : `http://localhost:${process.env.PORT}`;
+
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -46,7 +47,7 @@ app.prepare().then(() => {
     handle(req, res);
   });
 
-  server.listen(port, (err) => {
+  server.listen(process.env.PORT, (err) => {
     if (err) throw err;
     console.log(`Server listening on ${ROOT_URL}`);
   });

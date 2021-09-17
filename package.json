@@ -6,7 +6,7 @@
     "dev": "nodemon server/server.js --watch server",
     "build": "next build",
     "deploy": "next --public",
-    "start": "node server/app.js",
+    "start": "NODE_ENV=production node server/server.js",
     "lint": "next lint"
   },
   "dependencies": {
