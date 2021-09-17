@@ -14,7 +14,7 @@ const routes = require("./routes");
 
 const dev = process.env.NODE_ENV !== "production";
 const ROOT_URL = dev
-  ? process.env.PRODUCTION_URL
+  ? process.env.NEXT_PUBLIC_PRODUCTION_URL
   : `http://localhost:${process.env.PORT || 3000}`;
 const app = next({ dev });
 const handle = app.getRequestHandler();
