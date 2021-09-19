@@ -7,6 +7,7 @@ import { parseCookies } from "nookies";
 import InfiniteScroll from "react-infinite-scroll-component";
 import EndOfPage from "../EndOfPage/EndOfPage";
 import { getInitials } from "../../utils/getInitials.util";
+import axios from "axios";
 
 export default function FeedCard() {
   const { state, dispatch } = useStateContext();
@@ -21,39 +22,53 @@ export default function FeedCard() {
     e.preventDefault();
     const postedBy = state.userDetails.userId;
     const { jwt } = parseCookies("jwt");
-    const response = await addNewPost(postedBy, content, jwt);
+    const response = await axios.post(
+      "/api/feed/post",
+      {
+        content,
+      },
+      {
+        headers: {
+          Authorization: jwt,
+        },
+      }
+    );
     if (response.status === 200 || response.status === 200) {
       dispatch({ type: "ADD_A_NEW_POST", payload: response.data.post });
     } else {
-      dispatch({
-        type: "SET_ERROR_MESSAGES",
-        payload: response.message,
-      });
+      console.log("error");
     }
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await getAllPosts(state.userDetails.userId, 1, 7);
-        dispatch({ type: "FETCH_POSTS_FROM_API", payload: res.data.posts });
+        const res = await axios.get(
+          `/api/feed/post`,
+          state.userDetails.userId,
+          1,
+          7
+        );
+        console.log(res);
+        /* dispatch({ type: "FETCH_POSTS_FROM_API", payload: res.data.posts }); */
       } catch (error) {
-        dispatch({
+        /* dispatch({
           type: "SET_ERROR_MESSAGES",
           payload: res.message,
-        });
+        }); */
+        console.log(error);
       }
     })();
   }, []);
 
-  const fetchData = async () => {
+  /* const fetchData = async () => {
     const res = await getAllPosts(state.userDetails.userId, pageNumber, 7);
     dispatch({ type: "FETCH_POSTS_FROM_API", payload: res.data.posts });
     if (res.data.posts.length === 0) {
       setHasMore(false);
     }
     setPageNumber((pageNumber) => pageNumber + 1);
-  };
+  }; */
 
   return (
     <>
@@ -93,7 +108,7 @@ export default function FeedCard() {
               </div>
             </div>
           </section>
-          <InfiniteScroll
+          {/* <InfiniteScroll
             dataLength={state.posts.length}
             next={fetchData}
             hasMore={hasMoreData}
@@ -102,7 +117,10 @@ export default function FeedCard() {
             {state.posts.map((post) => (
               <PostCard key={post._id} post={post} />
             ))}
-          </InfiniteScroll>
+          </InfiniteScroll> */}
+          {state.posts.map((post) => (
+            <PostCard key={post._id} post={post} />
+          ))}
         </>
       )}
     </>

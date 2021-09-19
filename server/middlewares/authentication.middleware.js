@@ -1,35 +1,35 @@
-const mongoose = require("mongoose");
-const User = require("../models/user.model");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+import User from "../models/user.model";
+import jwt from "jsonwebtoken";
 
 // Authentication Middleware for verifying token
-const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization;
+const authMiddleware = (handler) => {
+  return async (req, res) => {
+    try {
+      const token = req.headers.authorization;
 
-    if (!token) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User is not logged in" });
-    }
+      if (!token) {
+        return res
+          .status(400)
+          .json({ success: false, message: "User is not logged in" });
+      }
 
-    const { _id } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById({ _id }).select("-password -__v");
-    if (!user) {
-      return res.status(400).json({
+      const { _id } = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById({ _id }).select("-password -__v");
+      if (!user) {
+        return res.status(400).json({
+          success: false,
+          message: "Not valid user",
+        });
+      }
+      req.user = user;
+      return handler(req, res);
+    } catch (error) {
+      return res.status(500).json({
         success: false,
-        message: "Not valid user",
+        message: "Something went wrong",
       });
     }
-    req.user = user;
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-    });
-  }
+  };
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;
