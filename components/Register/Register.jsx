@@ -1,17 +1,18 @@
 import Link from "next/link";
-import { registerUser } from "../../server/helpers/urls";
 import { useStateContext } from "../../context/state-context";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import axios from "axios";
 
 export default function Register() {
-  const { dispatch } = useStateContext();
+  const { state, dispatch } = useStateContext();
   const [formInputs, setFormInputs] = useState({
     fullName: "",
     userName: "",
     password: "",
   });
-  const [errors, setErrors] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   // Function to get text inputs value
@@ -22,18 +23,24 @@ export default function Register() {
   // Submit Handler for user signup
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await registerUser({
-      fullName: formInputs.fullName,
-      userName: formInputs.userName,
-      password: formInputs.password,
-    });
+    try {
+      const response = await axios.post("/api/auth/register", {
+        fullName: formInputs.fullName,
+        userName: formInputs.userName,
+        password: formInputs.password,
+      });
 
-    if (response.status === 201) {
-      return setTimeout(() => {
-        router.push("/");
-      }, 2000);
-    } else {
-      setErrors(response.message);
+      if (response.status === 201) {
+        return setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      }
+    } catch (error) {
+      dispatch({
+        type: "SET_ERROR_MESSAGES",
+        payload: error.response.data.message,
+      });
+      setLoading(false);
     }
   };
 
@@ -102,7 +109,7 @@ export default function Register() {
               />
             </div>
 
-            <p className="text-secondary text-center my-4">{errors}</p>
+            <p className="text-secondary text-center my-4">{state.errors}</p>
             <div>
               <button
                 type="submit"

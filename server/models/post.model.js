@@ -33,4 +33,4 @@ PostSchema.pre("findOne", autoPopulatePostedBy).pre(
 );
 PostSchema.index({ postedBy: 1, createdAt: 1 });
 
-module.exports = mongoose.model.Post || mongoose.model("Post", PostSchema);
+module.exports = mongoose.models.Post || mongoose.model("Post", PostSchema);
